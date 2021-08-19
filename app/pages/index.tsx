@@ -1,7 +1,6 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import type { NextPage } from "next";
 import Head from "next/head";
-import Image from "next/image";
 import {
   Button,
   Card,
@@ -55,7 +54,8 @@ const Home: NextPage = () => {
           display="flex"
           alignItems="center"
         >
-          <Image src="/dice.png" alt="dice icon" height="26px" width="26px" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/dice.png" alt="dice icon" />
           <Heading size={700} marginLeft="10px">
             Random Picker
           </Heading>
