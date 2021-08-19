@@ -55,7 +55,7 @@ const Home: NextPage = () => {
           alignItems="center"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/dice.png" alt="dice icon" />
+          <img src="/dice.png" alt="dice icon" width="28px" height="28px" />
           <Heading size={700} marginLeft="10px">
             Random Picker
           </Heading>
