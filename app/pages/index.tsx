@@ -9,13 +9,14 @@ import {
   Pane,
   Table,
   Text,
-  TextInputField,
+  TextInput,
 } from "evergreen-ui";
 import styles from "../styles/Home.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "../redux/store";
 import { Item } from "../item.interface";
-import { addItem } from "../redux/actions";
+import { addItem, removeItem } from "../redux/actions";
+import { RandomItem } from "../components/RandomItem";
 
 const Home: NextPage = () => {
   const items = useSelector<AppState, Item[]>((state) => state.items);
@@ -27,18 +28,24 @@ const Home: NextPage = () => {
 
   const addItemToList = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    dispatch(
-      addItem({
-        name: inputFieldText,
-      })
-    );
-    setInputFieldText("");
+    if (inputFieldText !== "") {
+      dispatch(
+        addItem({
+          name: inputFieldText,
+        })
+      );
+      setInputFieldText("");
+    }
   };
 
   const pickRandomItem = () => {
     const randIdx = Math.floor(Math.random() * items.length);
     setRandomItem(items[randIdx]);
     setShowRandomItem(true);
+  };
+
+  const deleteItemFromList = (item: Item) => {
+    dispatch(removeItem({ id: item.id }));
   };
 
   return (
@@ -74,22 +81,46 @@ const Home: NextPage = () => {
             padding="16px"
           >
             <form onSubmit={addItemToList}>
-              <TextInputField
-                label="Add an Item"
-                description="Enter an item for your list you would like to randomly pick from"
-                value={inputFieldText}
-                onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                  setInputFieldText(event.target.value)
-                }
-              />
+              <Heading size={500} paddingBottom="2px">
+                Add an Item
+              </Heading>
+              <Text size={300}>
+                Enter an item for your list that you would like to randomly pick
+                from
+              </Text>
+              <Pane
+                display="flex"
+                alignItems="center"
+                width="100%"
+                paddingTop="7px"
+                paddingBottom="8px"
+              >
+                <TextInput
+                  flexGrow={1}
+                  value={inputFieldText}
+                  onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                    setInputFieldText(event.target.value)
+                  }
+                />
+                <Button
+                  disabled={inputFieldText === ""}
+                  appearance="primary"
+                  marginLeft="8px"
+                  type="submit"
+                >
+                  Add
+                </Button>
+              </Pane>
             </form>
             {items.length > 0 && (
               <Table>
                 <Table.Body>
                   {items.map((item) => (
-                    <Table.Row key={item.id}>
-                      <Table.TextCell>{item.name}</Table.TextCell>
-                    </Table.Row>
+                    <RandomItem
+                      key={item.id}
+                      data={item}
+                      onDelete={() => deleteItemFromList(item)}
+                    />
                   ))}
                 </Table.Body>
               </Table>
