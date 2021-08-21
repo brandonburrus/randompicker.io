@@ -9,7 +9,7 @@ import {
   Pane,
   Table,
   Text,
-  TextInputField,
+  TextInput,
 } from "evergreen-ui";
 import styles from "../styles/Home.module.css";
 import { useDispatch, useSelector } from "react-redux";
@@ -28,12 +28,14 @@ const Home: NextPage = () => {
 
   const addItemToList = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    dispatch(
-      addItem({
-        name: inputFieldText,
-      })
-    );
-    setInputFieldText("");
+    if (inputFieldText !== "") {
+      dispatch(
+        addItem({
+          name: inputFieldText,
+        })
+      );
+      setInputFieldText("");
+    }
   };
 
   const pickRandomItem = () => {
@@ -79,14 +81,36 @@ const Home: NextPage = () => {
             padding="16px"
           >
             <form onSubmit={addItemToList}>
-              <TextInputField
-                label="Add an Item"
-                description="Enter an item for your list you would like to randomly pick from"
-                value={inputFieldText}
-                onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                  setInputFieldText(event.target.value)
-                }
-              />
+              <Heading size={500} paddingBottom="2px">
+                Add an Item
+              </Heading>
+              <Text size={300}>
+                Enter an item for your list that you would like to randomly pick
+                from
+              </Text>
+              <Pane
+                display="flex"
+                alignItems="center"
+                width="100%"
+                paddingTop="7px"
+                paddingBottom="8px"
+              >
+                <TextInput
+                  flexGrow={1}
+                  value={inputFieldText}
+                  onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                    setInputFieldText(event.target.value)
+                  }
+                />
+                <Button
+                  disabled={inputFieldText === ""}
+                  appearance="primary"
+                  marginLeft="8px"
+                  type="submit"
+                >
+                  Add
+                </Button>
+              </Pane>
             </form>
             {items.length > 0 && (
               <Table>
