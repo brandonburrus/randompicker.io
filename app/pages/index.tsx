@@ -15,7 +15,8 @@ import styles from "../styles/Home.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "../redux/store";
 import { Item } from "../item.interface";
-import { addItem } from "../redux/actions";
+import { addItem, removeItem } from "../redux/actions";
+import { RandomItem } from "../components/RandomItem";
 
 const Home: NextPage = () => {
   const items = useSelector<AppState, Item[]>((state) => state.items);
@@ -39,6 +40,10 @@ const Home: NextPage = () => {
     const randIdx = Math.floor(Math.random() * items.length);
     setRandomItem(items[randIdx]);
     setShowRandomItem(true);
+  };
+
+  const deleteItemFromList = (item: Item) => {
+    dispatch(removeItem({ id: item.id }));
   };
 
   return (
@@ -87,9 +92,11 @@ const Home: NextPage = () => {
               <Table>
                 <Table.Body>
                   {items.map((item) => (
-                    <Table.Row key={item.id}>
-                      <Table.TextCell>{item.name}</Table.TextCell>
-                    </Table.Row>
+                    <RandomItem
+                      key={item.id}
+                      data={item}
+                      onDelete={() => deleteItemFromList(item)}
+                    />
                   ))}
                 </Table.Body>
               </Table>

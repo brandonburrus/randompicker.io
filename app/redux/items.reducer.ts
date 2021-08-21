@@ -12,6 +12,6 @@ export const itemsReducer = createReducer<Item[]>([], (builder) => {
       });
     })
     .addCase(removeItem, (state, action) => {
-      state.splice(action.payload.index, 1);
+      return state.filter((item) => item.id !== action.payload.id);
     });
 });
